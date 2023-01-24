@@ -19,6 +19,8 @@ class ProjectController extends Controller
     {
         $data = Project::orderby('id', 'desc')->paginate(5);
         $direction = 'desc';
+
+
         return view('admin.projects.index', compact('data', 'direction'));
     }
 
@@ -27,6 +29,7 @@ class ProjectController extends Controller
 
         $direction = $direction === 'desc' ? 'asc' : 'desc';
         $data =  Project::orderby($column, $direction)->paginate(5);
+
         return view('admin.projects.index', compact('data', 'direction'));
     }
 
@@ -40,6 +43,7 @@ class ProjectController extends Controller
     public function create()
     {
         $data_type = Type::all();
+
         return view('admin.projects.create', compact('data_type'));
     }
 
@@ -59,7 +63,6 @@ class ProjectController extends Controller
             $data['img'] = Storage::put('uploads', $data['img']);
         }
         $data['slug'] = Project::generateSlug($data['name']);
-
         $new_project->fill($data);
         $new_project->save();
 
@@ -87,6 +90,7 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $data_type = Type::all();
+
         return view('admin.projects.edit', compact('project', 'data_type'));
     }
 
@@ -107,7 +111,6 @@ class ProjectController extends Controller
         } else {
             $data['slug'] = $project->slug;
         }
-
         if (array_key_exists('img', $data)) {
             if ($project->img) {
                 Storage::disk('public')->delete($project->img);
@@ -115,7 +118,6 @@ class ProjectController extends Controller
             $data['img_original_name'] = $request->file('img')->getClientOriginalName();
             $data['img'] = Storage::put('uploads', $data['img']);
         }
-
         $project->update($data);
 
         return redirect()->route('admin.projects.show', $project);

@@ -25,7 +25,15 @@
                         @foreach ($data as $project)
                             <tr>
                                 <th scope="row sc-row">{{ $project->id }}</th>
-                                <td class="">{{ $project->name }}</td>
+                                <td class="">{{ $project->name }}<br>
+                                    <div>
+                                        @forelse ($project->technologies as $technology )
+                                            <span class="badge text-bg-success">{{$technology->name}}</span>
+                                        @empty
+
+                                        @endforelse
+                                    </div>
+                                </td>
                                 <td class="">{{ $project->client_name }}</td>
                                 <td>
                                     @if($project->type)<h4><span class="badge bg-primary">{{ $project->type->name }}@endif</span></h4>
