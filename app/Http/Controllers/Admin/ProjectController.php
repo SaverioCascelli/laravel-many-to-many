@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Http\Requests\ProjectRequest;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,8 +44,8 @@ class ProjectController extends Controller
     public function create()
     {
         $data_type = Type::all();
-
-        return view('admin.projects.create', compact('data_type'));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('data_type', 'technologies'));
     }
 
     /**
@@ -57,15 +58,22 @@ class ProjectController extends Controller
     {
         $new_project = new Project();
         $data = $request->all();
+
         if (array_key_exists('img', $data)) {
             //dd($data);
             $data['img_original_name'] = $request->file('img')->getClientOriginalName();
             $data['img'] = Storage::put('uploads', $data['img']);
         }
+
         $data['slug'] = Project::generateSlug($data['name']);
         $new_project->fill($data);
         $new_project->save();
 
+        if (array_key_exists('technologies', $data)) {
+            foreach ($data['technologies'] as $technology) {
+                $new_project->technologies()->attach($technology);
+            }
+        }
         return redirect(route('admin.projects.show', $new_project));
     }
 
