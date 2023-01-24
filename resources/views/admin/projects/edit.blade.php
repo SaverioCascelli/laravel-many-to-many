@@ -32,39 +32,51 @@
         <div class="mb-3">
             <label for="type_id" class="form-label">Type </label>
             <select name="type_id" class="form-select" aria-label="type project select">
-                <option value="" >Select project type</option>
+                <option value="">Select project type</option>
                 @foreach ($data_type as $type)
-                    <option @if ($type->id == old('type_id', $project->type?->id )) selected @endif
-                    value="{{ $type->id }}">
+                    <option @if ($type->id == old('type_id', $project->type?->id)) selected @endif value="{{ $type->id }}">
                         {{ $type->name }} </option>
                 @endforeach
             </select>
         </div>
-
         <div class="mb-3">
-            <label for="summary" class="form-label">Summary</label>
-            <input value="{{ old('summary', $project->summary) }}" type="text"
-                class="form-control @error('summary') is-invalid @enderror" id="summary" name="summary">
-            @error('summary')
-                <p class="invalid-feedback">{{ $message }}</p>
-            @enderror
-        </div>
+            <p>Select used Technologies</p>
+            @forelse ($technologies as $technology)
+                <div class="form-check">
 
+                    <input class="form-check-input" type="checkbox" name="technologies[]" value="{{ $technology->id }}"
+                        id="{{ $technology->slug }}" @if ($project->technologies->contains($technology)) checked @endif>
+                    <label class="form-check-label" for="{{ $technology->slug }}">
+                        {{ $technology->name }}
+                    </label>
+                </div>
 
-        <div class="mb-3">
-            <label for="img" class="form-label">Cover img</label>
-            <input onchange="showImage(event)" value="{{ old('img') }}" type="file"
-                class="form-control @error('img') is-invalid @enderror" name="img">
-            @error('img')
-                <p class="invalid-feedback">{{ $message }}</p>
-            @enderror
-            <div class="image mt-2">
-                <img id='output-image' width="150" src="{{ asset('storage/' . $project->img) }}" alt="">
+            @empty
+            @endforelse
+            <div class="mb-3">
+                <label for="summary" class="form-label">Summary</label>
+                <input value="{{ old('summary', $project->summary) }}" type="text"
+                    class="form-control @error('summary') is-invalid @enderror" id="summary" name="summary">
+                @error('summary')
+                    <p class="invalid-feedback">{{ $message }}</p>
+                @enderror
             </div>
-        </div>
 
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="mb-3">
+                <label for="img" class="form-label">Cover img</label>
+                <input onchange="showImage(event)" value="{{ old('img') }}" type="file"
+                    class="form-control @error('img') is-invalid @enderror" name="img">
+                @error('img')
+                    <p class="invalid-feedback">{{ $message }}</p>
+                @enderror
+                <div class="image mt-2">
+                    <img id='output-image' width="150" src="{{ asset('storage/' . $project->img) }}" alt="">
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <script>
         function showImage(event) {

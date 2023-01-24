@@ -7,15 +7,21 @@
 
                 <h1>{{ $project->name }}</h1>
 
-                @if($project->type)
+                @if ($project->type)
                     <h4><span class="badge bg-primary">{{ $project->type->name }}
-                @endif</span></h4>
+                @endif
+                </span></h4>
                 @if ($project->img)
                     <div>
                         <img src="{{ asset('storage/' . $project->img) }}" alt="{{ $project->name }}">
                     </div>
                 @endif
                 <h3>client: {{ $project->client_name }}</h3>
+
+                @forelse ($project->technologies as $technology)
+                    <span class="badge text-bg-success">{{ $technology->name }}</span>
+                @empty
+                @endforelse
                 <p>{{ $project->summary }}</p>
 
             </div>
