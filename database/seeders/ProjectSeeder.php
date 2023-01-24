@@ -17,7 +17,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(Faker  $faker)
     {
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $new_project = new Project();
             $new_project->name = $faker->sentence();
             $new_project->slug = Project::generateSlug($new_project->name);
